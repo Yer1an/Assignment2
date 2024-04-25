@@ -62,7 +62,7 @@ public class MyArrayList<T> implements MyList<T> {
     @Override
     public void sort(){
         for(int i = 0; i < size; i++){
-            for(int j = i; j > 0 && array[j-1] > array[j]; j--){
+            for(int j = i; j > 0; j--){
 
 
             }
@@ -73,7 +73,7 @@ public class MyArrayList<T> implements MyList<T> {
     public int indexOf(Object object){
         for(int i = 0; i < size; i++){
             if(array[i] == object){
-                return 1;
+                return i;
             }
         }
         return -1;

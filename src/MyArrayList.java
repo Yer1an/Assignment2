@@ -1,26 +1,35 @@
+import java.util.Iterator;
 public class MyArrayList<T> implements MyList<T> {
-    private T array[];
+    private Object[] array;
     private int size;
 
     MyArrayList(){
-        array = (T[]) new Object[5];
-        size = 0;
+        this.array = new Object[5];
+        this.size = 0;
     }
-
+    @Override
     public void add(T item) {
-        if (array.length == size+1) {
+        if (array.length == size) {
             buffer();
         }
         array[size++] = item;
     }
     void buffer(){
-        T temp[] = (T[]) new Object[array.length * 2];
-        for(int i = 0; i < array.length; i++){
+        Object[] temp =  new Object[array.length * 2];
+        for(int i = 0; i < size; i++){
             temp[i] = array[i];
         }
         array = temp;
     }
-
+    @Override
+    public Object[] toArray(){
+        Object[] new_array = new Object[size];
+        for(int i = 0; i < size; i++){
+            new_array[i] = array[i];
+        }
+        return new_array;
+    }
+    @Override
     public void set(int index, T item){
         checker(index);
         array[index] = item;
@@ -32,110 +41,85 @@ public class MyArrayList<T> implements MyList<T> {
         }
     }
 
-    // Can we add to some index, which is strictly bigger the size?
+    @Override
     public void add(int index,T item){
-        if(index > size){
+        if(index > size || index < 0 ){
             throw new RuntimeException("Out of bounds");
         }
-        if (array.length == size+1) {
+        if (array.length == size) {
             buffer();
         }
-        checker_forAddition(index);
-        T lost = array[index];
+        Object lost = array[index];
         array[index] = item;
         size++;
         for(int i = index+1; i < size; i++){
-            T temp = array[i];
+            Object temp = array[i];
             array[i] = lost;
             lost = temp;
         }
     }
 
-    private void checker_forAddition(int index){
-        if(index > size){
-            throw new RuntimeException("Index way too out of bounds");
-        }
-    }
-
+    @Override
     public void sort(){
         for(int i = 0; i < size; i++){
             for(int j = i; j > 0 && array[j-1] > array[j]; j--){
 
+
             }
         }
     }
 
+    @Override
     public int indexOf(Object object){
-        T item  = (T) object;
-        int index = -1;
         for(int i = 0; i < size; i++){
-            if(array[i] == item){
-                index = i;
-                break;
+            if(array[i] == object){
+                return 1;
             }
         }
-        if(index == -1){
-            throw new RuntimeException("There is no such elements in the MyArrayList");
-        }
-        return index;
+        return -1;
     }
-
+    @Override
     public int lastIndexOf(Object object){
-        T item = (T) object;
-        int index = -1;
         for(int i = size; i >= 0; i--){
-            if(array[i] == item){
-                index = i;
-                break;
+            if(array[i] == object){
+                return i;
             }
         }
-        if(index == -1){
-            throw new RuntimeException("There is no such elements in the MyArrayList");
-        }
-        return index;
+        return -1;
     }
-
+    @Override
     public boolean exists(Object object){
-        T item = (T) object;
-        for(T i : array){
-            if(i == item){
-                return true;
-            }
-        }
-        return false;
+        return indexOf(object) != -1;
     }
-
+    @Override
     public void addFirst(T item){
-        if(size + 1 == array.length){
-            buffer();
-        }
-        T lost = array[0];
-        array[0] = item;
-        size++;
-        for(int i = 1; i < size; i++){
-            T temp = array[i];
-            array[i] = lost;
-            lost = temp;
-        }
+        add(0, item);
     }
-
+    @Override
     public  void addLast(T item){
-        if(size + 1 == array.length){
-            buffer();
-        }
-        array[size++] = item;
+        add(size, item);
     }
+    @Override
     public T get(int index){
         checker(index);
-        return array[index];
+        return (T) array[index];
     }
+    @Override
     public T getFirst(){
-        return array[0];
-    }
-    public T getLast(){
-        return array[size-1];
-    }
+        if(size == 0){
+            throw new RuntimeException("ArrayList is empty");
+        }
+        return (T)array[0];
 
+    }
+    @Override
+    public T getLast(){
+        if(size == 0){
+            throw new RuntimeException("ArrayList is empty");
+        }
+        return  (T)array[size-1];
+    }
+    @Override
     public void remove(int index){
         checker(index);
         for(int i = index+1; i < size; i++){
@@ -143,13 +127,43 @@ public class MyArrayList<T> implements MyList<T> {
         }
         size--;
     }
+    @Override
+    public void removeLast(){
+        if(size == 0){
+            throw new RuntimeException("Array is empty");
+        }
+        remove(size-1);
+    }
+    @Override
+    public void removeFirst(){
+        if(size == 0){
+            throw new RuntimeException("Array is empty");
+        }
+        remove(0);
+    }
+    @Override
     public void clear(){
-        array = (T[]) new Object[5];
+        array = new Object[5];
         size = 0;
     }
+    @Override
     public int size(){
         return size;
     }
 
+    @Override
+    public Iterator<T> iterator(){
+        return new Iterator<T>() {
+            private int current = 0;
+            @Override
+            public boolean hasNext() {
+                return current < size;
+            }
+            @Override
+            public T next() {
+                return (T) array[current++];
+            }
+        };
+    }
 
 }

@@ -36,7 +36,7 @@ public class MyArrayList<T> implements MyList<T> {
     }
 
     private void checker(int index) {
-        if(index >= size && index < 0) {
+        if(index >= size || index < 0) {
             throw new RuntimeException("Index out of bounds");
         }
     }
@@ -72,7 +72,7 @@ public class MyArrayList<T> implements MyList<T> {
     @Override
     public int indexOf(Object object){
         for(int i = 0; i < size; i++){
-            if(array[i] == object){
+            if(array[i].equals(object)){
                 return i;
             }
         }

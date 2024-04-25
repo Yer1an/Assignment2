@@ -10,7 +10,7 @@ public class MyStack<T>{
         stack.addLast(item);
     }
 
-    public T top(){
+    public T peek(){
         if(isEmpty()){
             throw new RuntimeException("Stack is empty");
         }
@@ -24,7 +24,7 @@ public class MyStack<T>{
         if(isEmpty()){
             throw new RuntimeException("There is nothing to remove stack is empty");
         }
-        T item = top();
+        T item = peek();
         stack.removeLast();
         return item;
     }
